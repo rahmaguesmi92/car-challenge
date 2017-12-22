@@ -1,0 +1,19 @@
+---
+  - name: update apt cache
+    apt: update_cache=yes
+
+  - name: Install ubuntu packages
+    apt: name={{ item }} state=present
+    with_items:
+      - ack-grep
+      - ant
+      - dos2unix
+      - git
+      - ngrep
+      - nscd
+      - re2c
+      - davfs2
+
+  - name: Set bash_aliases helper file for making the shell cute
+    become: no
+    template: src=bash_aliases.tpl dest=/home/vagrant/.bash_aliases

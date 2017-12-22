@@ -1,0 +1,16 @@
+---
+- stat: path=/etc/php/7.0/fpm/php.ini
+  register: phpfpm
+  sudo: yes
+
+- stat: path=/etc/php/7.0/cli/php.ini
+  register: phpcli
+  sudo: yes
+
+- include: php-fpm.yml
+  when: phpfpm.stat.exists
+  sudo: yes
+
+- include: php-cli.yml
+  when: phpcli.stat.exists
+  sudo: yes
