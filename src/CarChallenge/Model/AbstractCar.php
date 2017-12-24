@@ -5,11 +5,15 @@ use CarChallenge\Model\Engine\AbstractEngine;
 
 abstract class AbstractCar
 {
-    private $seats;
-    private $engine;
-    private $wheels;
-    private $doors;
-    private $trunkVolume;
+    const COLOR_RED = 'red';
+    const COLOR_BLUE = 'blue';
+
+    protected $seats;
+    protected $engine;
+    protected $wheels;
+    protected $doors;
+    protected $trunkVolume;
+    protected $color;
 
     /**
      * @return int
@@ -50,20 +54,21 @@ abstract class AbstractCar
     }
 
     /**
-     * @return int
+     * @return Wheel[]
      */
-    public function getWheels(): int
+    public function getWheels()
     {
         return $this->wheels;
     }
 
     /**
-     * @param int $wheels
+     * @param Wheel $wheel
+     *
      * @return AbstractCar
      */
-    public function setWheels(int $wheels)
+    public function addWheel(Wheel $wheel)
     {
-        $this->wheels = $wheels;
+        $this->wheels[] = $wheel;
 
         return $this;
     }
@@ -113,14 +118,14 @@ abstract class AbstractCar
          */
     }
 
-    public function addPassenger()
+    public function addPassenger(Passenger $passenger)
     {
         /**
          * @Todo: Implement
          */
     }
 
-    public function addLuggage()
+    public function addLuggage(Luggage $luggage)
     {
         /**
          * @Todo: Implement
