@@ -12,8 +12,7 @@ class ElectricEngineTest extends TestCase
         $engine = new ElectricEngine(200);
 
         $this->assertEquals(200, $engine->getHorsePower());
-
-
+        
         $this->assertFalse($engine->isStarted());
 
         $engine->start();

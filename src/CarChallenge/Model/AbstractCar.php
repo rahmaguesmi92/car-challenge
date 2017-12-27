@@ -1,6 +1,13 @@
 <?php
+
 namespace CarChallenge\Model;
 
+use CarChallenge\Exception\DoorCountIsNotValidException;
+use CarChallenge\Exception\InvalidColorException;
+use CarChallenge\Exception\NoEngineException;
+use CarChallenge\Exception\NotAllowedToAddFivePassengersPerCar;
+use CarChallenge\Exception\NotAllowedToAddFiveWheelsPerCar;
+use CarChallenge\Exception\NotAllowedToAddLuggageMoreThanTrunkVolume;
 use CarChallenge\Model\Engine\AbstractEngine;
 
 abstract class AbstractCar
@@ -14,6 +21,7 @@ abstract class AbstractCar
     protected $doors;
     protected $trunkVolume;
     protected $color;
+    protected $passengers;
 
     /**
      * @return int
@@ -68,6 +76,9 @@ abstract class AbstractCar
      */
     public function addWheel(Wheel $wheel)
     {
+        if (count($this->getWheels()) === 4) {
+            throw new NotAllowedToAddFiveWheelsPerCar();
+        }
         $this->wheels[] = $wheel;
 
         return $this;
@@ -87,6 +98,9 @@ abstract class AbstractCar
      */
     public function setDoors(int $doors)
     {
+        if ($doors > 4) {
+            throw new DoorCountIsNotValidException();
+        }
         $this->doors = $doors;
 
         return $this;
@@ -113,23 +127,60 @@ abstract class AbstractCar
 
     public function startEngine()
     {
-        /**
-         * @Todo: Implement
-         */
+        if ($this->engine === null) {
+            throw new NoEngineException();
+        }
+        $this->getEngine()->start();
+
+        return $this->getEngine()->isStarted();
     }
+
 
     public function addPassenger(Passenger $passenger)
     {
-        /**
-         * @Todo: Implement
-         */
+        if (count($this->passengers) > $this->seats) {
+            throw new NotAllowedToAddFivePassengersPerCar();
+        }
+        $this->passengers[] = $passenger;
+
+        return $this;
     }
 
     public function addLuggage(Luggage $luggage)
     {
-        /**
-         * @Todo: Implement
-         */
+        if ($luggage->getWeight() > $this->trunkVolume) {
+            throw new NotAllowedToAddLuggageMoreThanTrunkVolume();
+        }
+        $this->trunkVolume -= $luggage->getWeight();
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    /**
+     * @param mixed $color
+     */
+    public function setColor(string $color)
+    {
+        if ($color !== self::COLOR_BLUE && $color !== self::COLOR_RED) {
+            throw new InvalidColorException();
+        }
+        $this->color = $color;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPassengers()
+    {
+        return $this->passengers;
     }
 
 }
